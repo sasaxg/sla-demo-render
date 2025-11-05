@@ -1,0 +1,34 @@
+services:
+  - type: web
+    name: node-app
+    runtime: docker
+    dockerfilePath: app/Dockerfile
+    plan: free
+    healthCheckPath: /health
+
+  - type: web
+    name: prometheus
+    runtime: docker
+    dockerfilePath: prometheus/Dockerfile
+    plan: free
+
+  - type: web
+    name: grafana
+    runtime: docker
+    dockerfilePath: grafana/Dockerfile
+    plan: free
+
+  - type: web
+    name: blackbox
+    runtime: docker
+    dockerfilePath: blackbox/Dockerfile
+    plan: free
+
+  - type: web
+    name: alertmanager
+    runtime: docker
+    dockerfilePath: alertmanager/Dockerfile
+    plan: free
+    envVars:
+      - key: SMTP_PASSWORD
+        value: dnlvfzwcwvwyiqwt   
