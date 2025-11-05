@@ -5,24 +5,33 @@ services:
     dockerfilePath: app/Dockerfile
     plan: free
     healthCheckPath: /health
+    autoDeploy: true
 
   - type: web
     name: prometheus
     runtime: docker
     dockerfilePath: prometheus/Dockerfile
     plan: free
+    autoDeploy: true
 
   - type: web
     name: grafana
     runtime: docker
     dockerfilePath: grafana/Dockerfile
     plan: free
+    envVars:
+      - key: GF_SECURITY_ADMIN_USER
+        value: admin
+      - key: GF_SECURITY_ADMIN_PASSWORD
+        value: admin123
+    autoDeploy: true
 
   - type: web
     name: blackbox
     runtime: docker
     dockerfilePath: blackbox/Dockerfile
     plan: free
+    autoDeploy: true
 
   - type: web
     name: alertmanager
@@ -31,4 +40,5 @@ services:
     plan: free
     envVars:
       - key: SMTP_PASSWORD
-        value: dnlvfzwcwvwyiqwt   
+        value: dnlvfzwcwvwyiqwt
+    autoDeploy: true
