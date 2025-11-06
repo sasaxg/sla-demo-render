@@ -3,7 +3,6 @@ services:
     name: node-app
     runtime: docker
     dockerfilePath: ./app/Dockerfile
-    buildContext: ./app
     plan: free
     healthCheckPath: /health
     autoDeploy: true
