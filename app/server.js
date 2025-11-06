@@ -2,11 +2,8 @@ const express = require('express');
 const client = require('prom-client');
 const app = express();
 const register = new client.Registry();
-
-// Thu thập metrics mặc định (CPU, memory, event loop, etc.)
 client.collectDefaultMetrics({ register });
 
-// Histogram đo latency
 const httpRequestDuration = new client.Histogram({
   name: 'http_request_duration_seconds',
   help: 'Duration of HTTP requests in seconds',
@@ -15,23 +12,21 @@ const httpRequestDuration = new client.Histogram({
   registers: [register]
 });
 
-// Health check
+// THÊM ROUTE ROOT "/" ĐỂ FIX 404
+app.get('/', (req, res) => {
+  res.json({ message: 'SLA Demo API is running! Try /api or /health' });
+});
+
 app.get('/health', (req, res) => {
   res.status(200).send('OK');
 });
 
-// API endpoint
 app.get('/api', async (req, res) => {
   const end = httpRequestDuration.startTimer({ method: 'GET', url: '/api' });
-  
-  // Bỏ comment dòng dưới để test latency > 500ms
-  // await new Promise(r => setTimeout(r, Math.random() * 1000 + 500));
-  
   end();
   res.json({ data: 'Hello from SLA Demo' });
 });
 
-// Metrics endpoint cho Prometheus
 app.get('/metrics', async (req, res) => {
   res.set('Content-Type', register.contentType);
   res.end(await register.metrics());
