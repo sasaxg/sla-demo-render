@@ -1,20 +1,22 @@
 groups:
-- name: sla_violations
-  rules:
-  - alert: LowUptime
-    expr: avg_over_time(probe_success{job="blackbox"}[1m]) < 0.999
-    for: 1m
-    labels:
-      severity: critical
-    annotations:
-      summary: "Uptime < 99.9%"
-      description: "Current: {{ $value | printf \"%.2f\" }}"
+  - name: sla_violations
+    rules:
+      # 1. Low Uptime Alert
+      - alert: LowUptime
+        expr: avg_over_time(probe_success{job="blackbox"}[1m]) < 0.999
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Uptime < 99.9%"
+          description: "Current uptime: {{ $value | printf \"%.3f\" }}% (SLA violation)"
 
-  - alert: HighLatency
-    expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job="node-app"}[5m])) by (le)) > 0.5
-    for: 1m
-    labels:
-      severity: warning
-    annotations:
-      summary: "P95 Latency > 500ms"
-      description: "Current: {{ $value | printf \"%.3f\" }}s"
+      # 2. High Latency Alert (P95 > 500ms)
+      - alert: HighLatency
+        expr: histogram_quantile(0.95, sum(rate(http_request_duration_seconds_bucket{job="node-app"}[5m])) by (le)) > 0.5
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "P95 Latency > 500ms"
+          description: "Current P95: {{ $value | printf \"%.3f\" }}s (SLA violation)"
