@@ -1,7 +1,6 @@
-FROM node:18-alpine
 WORKDIR /app
-COPY package.json .
-COPY server.js .
+COPY app/package.json .
+COPY app/server.js .
 RUN npm install
 EXPOSE 8080
 CMD ["node", "server.js"]
