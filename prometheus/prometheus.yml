@@ -5,31 +5,29 @@ global:
 alerting:
   alertmanagers:
     - static_configs:
-        - targets: ['alertmanager:9093']
+        - targets: ['alertmanager:9093']  # Nếu alertmanager không deploy, bỏ đi
 
 rule_files:
-  - 'alert.rules.yml'  # Đảm bảo file này tồn tại trong thư mục prometheus/
+  - 'alert.rules.yml'
 
 scrape_configs:
-  # 1. Node App
   - job_name: 'node-app'
     static_configs:
-      - targets: ['node-app:8080']
+      - targets: ['node-app-3n1x.onrender.com']
         labels:
           instance: 'node-app'
 
-  # 2. Blackbox Exporter
   - job_name: 'blackbox'
     metrics_path: /probe
     params:
       module: [http_2xx]
     static_configs:
       - targets:
-          - http://node-app:8080/health
+          - https://node-app-3n1x.onrender.com/health
     relabel_configs:
       - source_labels: [__address__]
         target_label: __param_target
       - source_labels: [__param_target]
         target_label: instance
       - target_label: __address__
-        replacement: blackbox:9115
+        replacement: blackbox-ct2z.onrender.com  # domain public của blackbox exporter
