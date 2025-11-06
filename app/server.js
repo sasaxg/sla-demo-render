@@ -2,8 +2,11 @@ const express = require('express');
 const client = require('prom-client');
 const app = express();
 const register = new client.Registry();
+
+// Thu thập metrics mặc định (CPU, memory, event loop, etc.)
 client.collectDefaultMetrics({ register });
 
+// Histogram đo latency
 const httpRequestDuration = new client.Histogram({
   name: 'http_request_duration_seconds',
   help: 'Duration of HTTP requests in seconds',
@@ -12,18 +15,30 @@ const httpRequestDuration = new client.Histogram({
   registers: [register]
 });
 
-app.get('/health', (req, res) => res.status(200).send('OK'));
+// Health check
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
 
+// API endpoint
 app.get('/api', async (req, res) => {
   const end = httpRequestDuration.startTimer({ method: 'GET', url: '/api' });
-  // await new Promise(r => setTimeout(r, Math.random() * 450 + 50)); // bỏ comment để test latency
+  
+  // Bỏ comment dòng dưới để test latency > 500ms
+  // await new Promise(r => setTimeout(r, Math.random() * 1000 + 500));
+  
   end();
   res.json({ data: 'Hello from SLA Demo' });
 });
 
+// Metrics endpoint cho Prometheus
 app.get('/metrics', async (req, res) => {
   res.set('Content-Type', register.contentType);
   res.end(await register.metrics());
 });
 
-app.listen(8080, () => console.log('App running on port 8080'));
+// BẮT BUỘC CHO RENDER
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`App running on port ${PORT}`);
+});
