@@ -3,6 +3,7 @@ services:
     name: node-app
     runtime: docker
     dockerfilePath: app/Dockerfile
+    buildContext: .
     plan: free
     healthCheckPath: /health
     autoDeploy: true
@@ -11,6 +12,7 @@ services:
     name: prometheus
     runtime: docker
     dockerfilePath: prometheus/Dockerfile
+    buildContext: .
     plan: free
     autoDeploy: true
 
@@ -18,6 +20,7 @@ services:
     name: grafana
     runtime: docker
     dockerfilePath: grafana/Dockerfile
+    buildContext: .
     plan: free
     envVars:
       - key: GF_SECURITY_ADMIN_USER
@@ -30,6 +33,7 @@ services:
     name: blackbox
     runtime: docker
     dockerfilePath: blackbox/Dockerfile
+    buildContext: .
     plan: free
     autoDeploy: true
 
@@ -37,6 +41,7 @@ services:
     name: alertmanager
     runtime: docker
     dockerfilePath: alertmanager/Dockerfile
+    buildContext: .
     plan: free
     envVars:
       - key: SMTP_PASSWORD
