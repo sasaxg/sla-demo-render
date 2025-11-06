@@ -1,44 +1,51 @@
 services:
+  # 1. Node App
   - type: web
     name: node-app
     runtime: docker
-    dockerfilePath: ./app/Dockerfile
+    dockerfilePath: ./app/Dockerfile        # ĐÚNG ĐƯỜNG DẪN
     plan: free
+    envVars:
+      NODE_ENV: production
     healthCheckPath: /health
-    autoDeploy: true
 
-  - type: web
+  # 2. Prometheus
+  - type: private
     name: prometheus
     runtime: docker
-    dockerfilePath: ./prometheus/Dockerfile
+    dockerfilePath: ./prometheus/Dockerfile # ĐÚNG
     plan: free
-    autoDeploy: true
+    disk:
+      name: prometheus-data
+      mountPath: /prometheus
+      sizeGB: 1
 
+  # 3. Alertmanager
+  - type: private
+    name: alertmanager
+    runtime: docker
+    dockerfilePath: ./alertmanager/Dockerfile # ĐÚNG
+    plan: free
+    envVars:
+      SMTP_SMART_HOST: smtp.gmail.com:587
+      SMTP_FROM: sasa270703@gmail.com
+      SMTP_AUTH_USERNAME: sasa270703@gmail.com
+      SMTP_AUTH_PASSWORD: dnlvfzwcwvwyiqwt
+      SMTP_REQUIRE_TLS: "true"
+
+  # 4. Blackbox Exporter
+  - type: private
+    name: blackbox
+    runtime: docker
+    dockerfilePath: ./blackbox/Dockerfile   # ĐÚNG
+    plan: free
+
+  # 5. Grafana
   - type: web
     name: grafana
     runtime: docker
-    dockerfilePath: ./grafana/Dockerfile
+    dockerfilePath: ./grafana/Dockerfile    # ĐÚNG
     plan: free
     envVars:
-      - key: GF_SECURITY_ADMIN_USER
-        value: admin
-      - key: GF_SECURITY_ADMIN_PASSWORD
-        value: admin123
-    autoDeploy: true
-
-  - type: web
-    name: blackbox
-    runtime: docker
-    dockerfilePath: ./blackbox/Dockerfile
-    plan: free
-    autoDeploy: true
-
-  - type: web
-    name: alertmanager
-    runtime: docker
-    dockerfilePath: ./alertmanager/Dockerfile
-    plan: free
-    envVars:
-      - key: SMTP_PASSWORD
-        value: dnlvfzwcwvwyiqwt
-    autoDeploy: true
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin123
