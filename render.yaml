@@ -12,14 +12,12 @@ services:
 
   # 2. Prometheus
   - type: web
-    name: prometheus
-    runtime: docker
-    dockerfilePath: ./prometheus/Dockerfile
-    plan: free
-    disk:
-      name: prometheus-data
-      mountPath: /prometheus
-      sizeGB: 1
+  name: prometheus
+  runtime: docker
+  dockerfilePath: ./prometheus/Dockerfile
+  plan: free
+  autoDeploy: true
+
 
   # 3. Alertmanager
   - type: web
