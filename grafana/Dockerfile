@@ -1,3 +1,3 @@
 FROM grafana/grafana:latest
-ENV GF_SECURITY_ADMIN_USER=admin
-ENV GF_SECURITY_ADMIN_PASSWORD=admin123
+# Có thể copy dashboard, datasource ở đây
+EXPOSE 3000
