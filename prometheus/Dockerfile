@@ -1,5 +1,5 @@
 FROM prom/prometheus:v2.47.0
-COPY prometheus.yml /etc/prometheus/prometheus.yml
-COPY alert.rules.yml /etc/prometheus/alert.rules.yml
+COPY ./prometheus/prometheus.yml /etc/prometheus/prometheus.yml
+COPY ./prometheus/alert.rules.yml /etc/prometheus/alert.rules.yml
 EXPOSE 9090
 CMD ["--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.retention.time=7d"]
