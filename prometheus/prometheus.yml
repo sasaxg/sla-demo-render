@@ -8,15 +8,17 @@ alerting:
         - targets: ['alertmanager:9093']
 
 rule_files:
-  - 'alert.rules.yml'
+  - 'alert.rules.yml'  # Đảm bảo file này tồn tại trong thư mục prometheus/
 
 scrape_configs:
+  # 1. Node App
   - job_name: 'node-app'
     static_configs:
       - targets: ['node-app:8080']
         labels:
           instance: 'node-app'
 
+  # 2. Blackbox Exporter
   - job_name: 'blackbox'
     metrics_path: /probe
     params:
