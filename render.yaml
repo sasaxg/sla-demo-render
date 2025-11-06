@@ -2,8 +2,7 @@ services:
   - type: web
     name: node-app
     runtime: docker
-    dockerfilePath: app/Dockerfile
-    buildContext: .
+    dockerfilePath: ./app/Dockerfile
     plan: free
     healthCheckPath: /health
     autoDeploy: true
@@ -11,16 +10,14 @@ services:
   - type: web
     name: prometheus
     runtime: docker
-    dockerfilePath: prometheus/Dockerfile
-    buildContext: .
+    dockerfilePath: ./prometheus/Dockerfile
     plan: free
     autoDeploy: true
 
   - type: web
     name: grafana
     runtime: docker
-    dockerfilePath: grafana/Dockerfile
-    buildContext: .
+    dockerfilePath: ./grafana/Dockerfile
     plan: free
     envVars:
       - key: GF_SECURITY_ADMIN_USER
@@ -32,16 +29,14 @@ services:
   - type: web
     name: blackbox
     runtime: docker
-    dockerfilePath: blackbox/Dockerfile
-    buildContext: .
+    dockerfilePath: ./blackbox/Dockerfile
     plan: free
     autoDeploy: true
 
   - type: web
     name: alertmanager
     runtime: docker
-    dockerfilePath: alertmanager/Dockerfile
-    buildContext: .
+    dockerfilePath: ./alertmanager/Dockerfile
     plan: free
     envVars:
       - key: SMTP_PASSWORD
